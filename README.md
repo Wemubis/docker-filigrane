@@ -3,6 +3,8 @@
 A lightweight and privacy-friendly tool to watermark PDF files via a modern web UI.  
 Built with Flask and deployed in a self-contained Docker container.
 
+[Docker Hub](https://hub.docker.com/r/wemubis0/filigrane-pdf)
+
 <br>
 
 ## Features
@@ -61,5 +63,4 @@ docker rm filigrane-app
 > IMPORTANT NOTES
 >
 >- `.secret.key` is required and must be mounted at `/app/.secret.key`
->- It is not part of the Docker image (see .dockerignore)
 >- If missing, the app will not start
