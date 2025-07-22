@@ -58,7 +58,7 @@ docker rm filigrane-app
 ```
 <br><br>
 
->[!IMPORTANT] Important Notes
+> IMPORTANT NOTES
 >
 >- `.secret.key` is required and must be mounted at `/app/.secret.key`
 >- It is not part of the Docker image (see .dockerignore)
