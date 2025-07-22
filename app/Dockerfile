@@ -14,5 +14,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 RUN chmod +x /app/cleanup.sh
 RUN crontab /app/crontab.txt
 
-CMD ["sh", "-c", "cron && python app.py"]
-
+CMD cron && python app.py
