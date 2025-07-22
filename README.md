@@ -40,7 +40,7 @@ docker build -t filigrane-pdf .
 ### 4. Run the container (with mounted secret.key)
 ```bash
 docker run -d -p <PORT>:8080 \
-  -v <PATH>/.secret.key:/app/.secret.key:ro \
+  -v <ABSOLUTE_PATH>/.secret.key:/app/.secret.key:ro \
   --name filigrane-app filigrane-pdf
 ```
 
