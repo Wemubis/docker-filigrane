@@ -1,4 +1,4 @@
-# PDF Watermark Web App (Docker-ready)
+# PDF Watermark Web App
 
 A lightweight and privacy-friendly tool to watermark PDF files via a modern web UI.  
 Built with Flask and deployed in a self-contained Docker container.
@@ -15,7 +15,7 @@ Built with Flask and deployed in a self-contained Docker container.
 
 <br>
 
-## How to Run with Docker
+## How to run with Docker
 
 ### 1. Clone the repo
 
