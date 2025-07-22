@@ -1,4 +1,4 @@
-# PDF Watermark Web App
+# PDF Watermarker web app
 
 A lightweight and privacy-friendly tool to watermark PDF files via a modern web UI.  
 Built with Flask and deployed in a self-contained Docker container.
