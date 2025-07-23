@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>PDF Watermarker</title>
+    <title>PDF Watermark Tool</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -12,22 +12,19 @@
             align-items: center;
             height: 100vh;
         }
-
         .container {
             background: white;
             padding: 2rem 3rem;
             border-radius: 16px;
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
             width: 100%;
-            max-width: 500px;
+            max-width: 600px;
             text-align: center;
         }
-
         h2 {
             margin-bottom: 1.5rem;
             color: #333;
         }
-
         input[type="file"],
         input[type="text"] {
             width: 100%;
@@ -37,7 +34,6 @@
             border-radius: 8px;
             font-size: 1rem;
         }
-
         button {
             background-color: #007bff;
             color: white;
@@ -48,37 +44,42 @@
             font-size: 1rem;
             transition: background 0.3s;
         }
-
         button:hover {
             background-color: #0056b3;
         }
-
         .footer {
             margin-top: 1.5rem;
             font-size: 0.9rem;
             color: #888;
         }
+        iframe {
+            margin-top: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h2>PDF Watermarker</h2>
-        <form method="POST" enctype="multipart/form-data">
-            <input type="file" name="pdfs" accept=".pdf" multiple required>
-            <input type="text" name="text" placeholder="Ex: Watermark text" required>
-            <button type="submit">Apply the watermark</button>
-        </form>
-        <div class="footer">Hosted locally · Simple & Private · By Wemubis</div>
-		
-		{% if watermarked_file %}
-			<h3>Watermarked file ready:</h3>
-			<a href="{{ url_for('download_file', filename=watermarked_file) }}">
-				<button>Download Watermarked PDF</button>
-			</a>
-			<h4>Preview:</h4>
-			<iframe src="{{ url_for('preview_file', filename=watermarked_file) }}"
-					width="100%" height="500px" style="border: 1px solid #ccc; border-radius: 8px;"></iframe>
-		{% endif %}
-    </div>
+<div class="container">
+    <h2>Easy watermark</h2>
+
+    <form method="POST" enctype="multipart/form-data" action="/">
+        <input type="file" name="pdfs" accept=".pdf" multiple required>
+        <input type="text" name="text" placeholder="Ex: Watermark text" required>
+        <button type="submit">Apply the watermark</button>
+    </form>
+
+    {% if watermarked_file %}
+        <h3>Watermarked file ready:</h3>
+        <a href="{{ url_for('download_file', filename=watermarked_file) }}">
+            <button>Download Watermarked PDF</button>
+        </a>
+        <h4>Preview:</h4>
+        <iframe src="{{ url_for('preview_file', filename=watermarked_file) }}"
+                width="100%" height="500px"></iframe>
+    {% endif %}
+
+    <div class="footer">Hosted locally · Simple & Private · By Wemubis</div>
+</div>
 </body>
 </html>
