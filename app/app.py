@@ -7,16 +7,17 @@ from reportlab.lib.utils import ImageReader
 from io import BytesIO
 from pdf2image import convert_from_path
 import os
-import sys
+import uuid
 
 app = Flask(__name__)
 
+# Load secret key from external file
 try:
-    with open('secret.key', 'r') as f:
+    with open('.secret.key', 'r') as f:
         app.secret_key = f.read().strip()
 except FileNotFoundError:
-    print("❌ secret.key not found. Please mount it as a volume.")
-    sys.exit(1)
+    print(".secret.key not found. Please mount it as a volume at /app/secret.key.")
+    exit(1)
 
 UPLOAD_FOLDER = 'uploads'
 OUTPUT_FOLDER = 'watermarked'
@@ -24,21 +25,22 @@ OUTPUT_FOLDER = 'watermarked'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 
-def create_watermark(text, page_index=0):
+# Filigrane identique sur toutes les pages
+def create_watermark(text):
     packet = BytesIO()
     can = canvas.Canvas(packet, pagesize=A4)
     can.setFont("Helvetica", 11)
     width, height = A4
 
-    step_y = 180
-    long_text = (text + " · ") * 40
-    y_offset = -100 + (page_index * (step_y // 2))
+    step_y = 140
+    long_text = (text + " · ") * 120
+    y_offset = -400
 
-    for y in range(y_offset, int(height) + step_y * 2, step_y):
+    for y in range(y_offset, int(height) + 800, step_y):
         can.saveState()
-        can.translate(-100, y)
+        can.translate(-500, y)
         can.rotate(25)
-        can.setFillColor(Color(0.25, 0.25, 0.25, alpha=0.4))
+        can.setFillColor(Color(0.25, 0.25, 0.25, alpha=0.35))
         can.drawString(0, 0, long_text)
         can.restoreState()
 
@@ -72,9 +74,9 @@ def apply_watermark(input_path, output_path, watermark_text):
     temp_output = output_path.replace(".pdf", "_temp.pdf")
     reader = PdfReader(input_path)
     writer = PdfWriter()
+    watermark = create_watermark(watermark_text).pages[0]
 
-    for i, page in enumerate(reader.pages):
-        watermark = create_watermark(watermark_text, page_index=i).pages[0]
+    for page in reader.pages:
         page.merge_page(watermark)
         writer.add_page(page)
 
@@ -89,13 +91,15 @@ def index():
     if request.method == 'POST':
         pdfs = request.files.getlist('pdfs')
         watermark_text = request.form['text']
-        merged_input_path = os.path.join(UPLOAD_FOLDER, "merged_input.pdf")
-        output_name = f"{pdfs[0].filename.rsplit('.', 1)[0]}_filigrane.pdf" if len(pdfs) == 1 else "grouped_filigrane.pdf"
+        unique_id = uuid.uuid4().hex
+
+        merged_input_path = os.path.join(UPLOAD_FOLDER, f"{unique_id}_merged.pdf")
+        output_name = f"{unique_id}_filigrane.pdf"
         output_path = os.path.join(OUTPUT_FOLDER, output_name)
 
         merger = PdfWriter()
         for pdf in pdfs:
-            filename = os.path.join(UPLOAD_FOLDER, pdf.filename)
+            filename = os.path.join(UPLOAD_FOLDER, f"{unique_id}_{pdf.filename}")
             pdf.save(filename)
             reader = PdfReader(filename)
             for page in reader.pages:
