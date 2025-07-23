@@ -13,7 +13,7 @@ app = Flask(__name__)
 
 # Clé secrète depuis fichier monté
 try:
-    with open('../volume/.secret.key', 'r') as f:
+    with open('.secret.key', 'r') as f:
         app.secret_key = f.read().strip()
 except FileNotFoundError:
     print(".secret.key not found. Please mount it at /app/.secret.key")
