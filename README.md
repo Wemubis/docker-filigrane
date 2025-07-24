@@ -12,7 +12,7 @@ Built with Flask and deployed in a self-contained Docker container.
 - Live preview before downloading  
 - Add watermark to multiple PDFs  
 - Multi-user safe: unique filenames per session  
-- Automatic cleanup every 24h (2:00 AM via cron)  
+- Automatic cleanup every 6h 
 - Secrets stored outside the image (via volume)
 
 <br>
@@ -52,7 +52,7 @@ Now open: http://<PORT>:8080
 
 #### Auto-Cleanup
 
-Files in /uploads and /watermarked are deleted daily at 2:00 AM<br>
+Files modified more than 2h ago in /uploads and /watermarked are deleted every 6h<br>
 Scheduled via built-in cron in the container
 
 #### Stop & Remove

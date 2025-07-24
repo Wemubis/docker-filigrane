@@ -1,3 +1,4 @@
 #!/bin/bash
-find /app/uploads -type f -mtime +0 -delete
-find /app/watermarked -type f -mtime +0 -delete
+
+find /app/uploads -type f -mmin +120 -delete
+find /app/watermarked -type f -mmin +120 -delete
