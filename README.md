@@ -23,7 +23,7 @@ Built with Flask and deployed in a self-contained Docker container.
 
 ```bash
 git clone https://github.com/Wemubis/docker-watermarker
-cd filigrane-pdf
+cd docker-watermarker
 ```
 
 ### 2. Generate a secure secret key (if not done)
