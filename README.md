@@ -36,7 +36,7 @@ You can store it anywhere on your computer. The app requires this file to run.
 
 ### 3. Build the image
 ```bash
-docker build -t filigrane-pdf .
+docker build -t pdf-watermarker .
 ```
 
 ### 4. Run the container (with mounted secret.key)
@@ -57,8 +57,8 @@ Scheduled via built-in cron in the container
 
 #### Stop & Remove
 ```bash
-docker stop filigrane-app
-docker rm filigrane-app
+docker stop watermark-app
+docker rm watermark-app
 ```
 <br><br>
 
