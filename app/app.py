@@ -9,9 +9,10 @@ from math import sin, cos, radians
 import os
 import uuid
 
+
 app = Flask(__name__)
 
-# Clé secrète depuis fichier monté
+
 try:
     with open('.secret.key', 'r') as f:
         app.secret_key = f.read().strip()
@@ -19,13 +20,15 @@ except FileNotFoundError:
     print(".secret.key not found. Please mount it at /app/.secret.key")
     exit(1)
 
+
 UPLOAD_FOLDER = 'uploads'
 OUTPUT_FOLDER = 'watermarked'
+
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 
-# Filigrane pour portrait
+
 def create_portrait_watermark(text, width, height):
     packet = BytesIO()
     can = canvas.Canvas(packet, pagesize=(width, height))
@@ -48,42 +51,32 @@ def create_portrait_watermark(text, width, height):
     packet.seek(0)
     return PdfReader(packet)
 
-# Filigrane pour page paysage
+
 def create_landscape_watermark(text, width, height):
     angle_deg = 25
-    angle = radians(angle_deg)
-
     packet = BytesIO()
     can = canvas.Canvas(packet, pagesize=(width, height))
-    can.setFont("Helvetica", 11)
+    font_size = 15
+    can.setFont("Helvetica", font_size)
     can.setFillColor(Color(0.3, 0.3, 0.3, alpha=0.4))
 
-    # Espacement raisonnable entre lignes et colonnes
-    dx = 400
-    dy = 220
+    step_y = int(height * 0.14)
+    long_text = (text + " · ") * 80
+    x_shift = -int(width * 0.6)
+    y_offset = -int(height * 1.5)
 
-    # Calcul des coordonnées en diagonale
-    cos_a = cos(angle)
-    sin_a = sin(angle)
-
-    base_text = text + " · "  # une seule répétition
-
-    for i in range(-int(width * 1.5), int(width * 1.5), dx):
-        for j in range(-int(height * 1.5), int(height * 1.5), dy):
-            x = i * cos_a - j * sin_a
-            y = i * sin_a + j * cos_a
-
-            can.saveState()
-            can.translate(x, y)
-            can.rotate(angle_deg)
-            can.drawString(0, 0, base_text)
-            can.restoreState()
+    for y in range(y_offset, int(height * 2), step_y):
+        can.saveState()
+        can.translate(x_shift, y)
+        can.rotate(angle_deg)
+        can.drawString(0, 0, long_text)
+        can.restoreState()
 
     can.save()
     packet.seek(0)
     return PdfReader(packet)
 
-# Conversion en PDF aplati image-only
+
 def flatten_pdf(input_pdf_path, output_pdf_path):
     images = convert_from_path(input_pdf_path, dpi=200)
     writer = PdfWriter()
@@ -106,7 +99,7 @@ def flatten_pdf(input_pdf_path, output_pdf_path):
     with open(output_pdf_path, "wb") as f:
         writer.write(f)
 
-# Applique le filigrane selon l'orientation
+
 def apply_watermark(input_path, output_path, watermark_text):
     temp_output = output_path.replace(".pdf", "_temp.pdf")
     reader = PdfReader(input_path)
@@ -130,7 +123,7 @@ def apply_watermark(input_path, output_path, watermark_text):
     flatten_pdf(temp_output, output_path)
     os.remove(temp_output)
 
-# Interface principale
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
