@@ -22,7 +22,7 @@ Built with Flask and deployed in a self-contained Docker container.
 ### 1. Clone the repo
 
 ```bash
-git clone https://github.com/Wemubis/filigrane-pdf.git
+git clone https://github.com/Wemubis/docker-watermarker
 cd filigrane-pdf
 ```
 
@@ -42,8 +42,10 @@ docker build -t filigrane-pdf .
 ### 4. Run the container (with mounted secret.key)
 ```bash
 docker run -d -p <PORT>:8080 \
+  --name watermark-app \
+  --restart unless-stopped \
   -v <ABSOLUTE_PATH>/.secret.key:/app/.secret.key:ro \
-  --name filigrane-app filigrane-pdf
+  pdf-watermarker
 ```
 
 Now open: http://<PORT>:8080
